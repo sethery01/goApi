@@ -17,6 +17,6 @@ func main() {
 	http.HandleFunc("/readyz", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprint(w, "Ready\n")
 	})
-
+	
 	log.Fatal(http.ListenAndServe("0.0.0.0:8080", nil))
 }

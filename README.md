@@ -1,1 +1,1 @@
-This is my repo for messing around with gin and learning some GO!
+This is my repo for messing around and learning some GO!

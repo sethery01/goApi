@@ -22,7 +22,7 @@ func main() {
 
 	// Get weather alerts
 	http.HandleFunc("/alerts", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprint(w, "ALERT ALERT\n\n")
+		fmt.Fprint(w, "WEATHER ALERTS!!!\n\n")
 
 		url := "https://api.weather.gov/alerts/active/area/MO"
 

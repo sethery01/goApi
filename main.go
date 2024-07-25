@@ -8,21 +8,44 @@ import (
 	"net/http"
 )
 
+// Define a global array to check for state codes
+var stateCodes = []string{
+	"AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA", "HI", "ID", "IL", "IN", "IA",
+	"KS", "KY", "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ",
+	"NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT",
+	"VA", "WA", "WV", "WI", "WY",
+}
+
+// Function to get weather alerts by state from the NWS
 func getAlerts(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, "WEATHER ALERTS!!!\n\n")
 
-	url := "https://api.weather.gov/alerts/active/area/MO"
+	state := r.URL.Query().Get("state")
+	for i := 0; i <= 50; i++ {
+		if i == 50 {
+			fmt.Fprint(w, "ERROR: Incorrect state code or no state code given.\n\n")
+			return
+		} else if state == stateCodes[i] {
+			break
+		} else {
+			continue
+		}
+	}
+
+	url := fmt.Sprintf("https://api.weather.gov/alerts/active/area/%s", state)
 
 	// Make a Get request to NWS
 	resp, err := http.Get(url)
 	if err != nil {
 		fmt.Fprint(w, err)
+		return
 	}
 
 	// Read in response body
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		fmt.Fprint(w, err)
+		return
 	}
 
 	// Unmarshal response body into struct
@@ -30,6 +53,7 @@ func getAlerts(w http.ResponseWriter, r *http.Request) {
 	err = json.Unmarshal(body, &alerts)
 	if err != nil {
 		fmt.Fprint(w, err)
+		return
 	}
 
 	// Print weather alerts and instructions to page
@@ -37,7 +61,6 @@ func getAlerts(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "Alert[%d]: %s\n", i, alerts.Features[i].Properties.Headline)
 		fmt.Fprintf(w, "Instruction: %s\n\n", alerts.Features[i].Properties.Instruction)
 	}
-
 }
 
 func main() {

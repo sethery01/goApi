@@ -56,6 +56,15 @@ func getAlerts(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// // Encode books data as JSON
+	// jsonData, err := json.Marshal(alerts)
+	// if err != nil {
+	// 	fmt.Fprint(w, err)
+	// }
+
+	// w.Header().Set("Content-Type", "application/json")
+	// w.Write(jsonData)
+
 	// Print weather alerts and instructions to page
 	for i := range alerts.Features {
 		fmt.Fprintf(w, "Alert[%d]: %s\n", i, alerts.Features[i].Properties.Headline)
